@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PlasticLess | بلاستيك أقل، كوكب أنظف</title>
+<meta name="description" content="منصة تفاعلية للتوعية بالتلوث البلاستيكي: حاسبة، لعبة فرز، دليل تدوير، فاحص ميكروبلاستيك وخطة 7 أيام. مشروع GEO217 - جامعة العلمين الدولية.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f0f3;--ink:#0a2230;--muted:#4a6272;--card:#fff;--line:#c9d8df;--cap:#f2c230;--blue:#1f5fc4;--green:#1a7a5e;--red:#c0392b;--hero:#0a2230;--s12:#bf8b2e;--s13:#3f7e44;--s14:#0880b8;--s11:#d87a0a;--bg2:#d3ebe8;--glass:rgba(255,255,255,.58);--gl:rgba(255,255,255,.7);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07151e;--ink:#e6f0f4;--muted:#9bb2bf;--card:#0d2230;--line:#1d3a4b;--hero:#030c12;--blue:#6aa5ff;--green:#4fc9a2;--red:#ff7a6b;--bg2:#0b2b36;--glass:rgba(13,34,48,.6);--gl:rgba(255,255,255,.12)}}
+:root[data-theme="dark"]{--bg:#07151e;--ink:#e6f0f4;--muted:#9bb2bf;--card:#0d2230;--line:#1d3a4b;--hero:#030c12;--blue:#6aa5ff;--green:#4fc9a2;--red:#ff7a6b;--bg2:#0b2b36;--glass:rgba(13,34,48,.6);--gl:rgba(255,255,255,.12)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;background:var(--bg)}
+body{margin:0;background:linear-gradient(160deg,var(--bg),var(--bg2));background-attachment:fixed;color:var(--ink);font:400 18px/1.8 Cairo,system-ui,sans-serif}
+h1,h2,h3{font-weight:800;line-height:1.3;margin:0 0 .5em}
+h2{font-size:clamp(1.7rem,4.5vw,2.5rem)}
+p{margin:0 0 1em;max-width:62ch}
+:focus-visible{outline:3px solid var(--cap);outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+section{padding:60px 0}.alt{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#bar{position:fixed;top:0;right:0;height:4px;width:0;background:var(--cap);z-index:20}
+nav{position:sticky;top:0;z-index:10;background:rgba(10,34,48,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#eaf4f7}
+nav::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hero);z-index:10}
+nav .wrap{display:flex;gap:18px;align-items:center;height:56px;overflow-x:auto;white-space:nowrap}
+nav b{margin-inline-end:auto;font-size:1.1rem}
+nav a{color:inherit;text-decoration:none;font-size:.92rem;opacity:.85}
+nav button{background:none;border:2px solid var(--cap);color:var(--cap);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:1rem;flex-shrink:0}
+.hero{background:linear-gradient(160deg,var(--hero),#0b4a5a 60%,#0f7a86);color:#eaf4f7;padding:56px 0 0}
+.hero h1{font-size:clamp(2.4rem,7vw,4.6rem);margin-bottom:.3em}
+.hero p{color:#b8cdd6;font-size:1.12rem}
+.counter{display:flex;flex-wrap:wrap;gap:24px;align-items:center;margin-top:24px}
+.counter .n{font-size:clamp(2.4rem,7vw,3.8rem);font-weight:800;color:var(--cap);line-height:1;font-variant-numeric:tabular-nums}
+.counter small{display:block;color:#9fb8c3;max-width:34ch;line-height:1.5;font-size:.9rem}
+.btn{display:inline-block;background:var(--cap);color:#0a2230;font:800 1rem Cairo,sans-serif;padding:10px 24px;border-radius:999px;border:0;text-decoration:none;cursor:pointer}
+.btn.sec{background:transparent;border:2px solid var(--blue);color:var(--blue)}
+.wave{display:block;width:100%;height:80px;margin-top:36px}.wave path{fill:var(--bg)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.stat b{display:block;font-size:2.4rem;font-weight:800;color:var(--blue);line-height:1.2}
+.stat span{font-size:.92rem;color:var(--muted);line-height:1.6;display:block}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tabs button{font:600 1rem Cairo,sans-serif;padding:8px 18px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.panel,.game,.tool,.scan{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px}
+
+.prob{border-inline-start:5px solid var(--red);padding-inline-start:14px;margin-bottom:20px}.prob b{color:var(--red)}
+.sol{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.sol div{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--card)}
+.sol h4{margin:0 0 4px;font-size:1.05rem}
+.sol p{margin:0 0 8px;font-size:.92rem;color:var(--muted);line-height:1.6}
+.chip{display:inline-block;font-size:.78rem;font-weight:800;color:#fff;padding:0 10px;border-radius:6px;line-height:1.7}
+.c12{background:var(--s12)}.c14{background:var(--s14)}.c13{background:var(--s13)}
+.today{margin-top:18px;background:var(--card);border-radius:10px;padding:12px 16px;font-weight:600}
+.guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.g{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;border-inline-start:6px solid var(--line)}
+.g.y{border-inline-start-color:var(--green)}.g.p{border-inline-start-color:var(--cap)}.g.n{border-inline-start-color:var(--red)}
+.g h3{font-size:1.1rem;margin:0 0 4px}.g h3 i{font-style:normal;background:var(--ink);color:var(--bg);border-radius:6px;padding:0 9px;margin-inline-end:8px}
+.g p{font-size:.92rem;color:var(--muted);line-height:1.6;margin:0 0 6px}.g strong{font-size:.85rem}
+.game{text-align:center}
+.item{font-size:1.7rem;font-weight:800;margin:10px 0 18px;min-height:2.6em}
+.opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.opts button{font:700 1rem Cairo,sans-serif;padding:10px 22px;border-radius:10px;border:2px solid var(--blue);background:transparent;color:var(--blue);cursor:pointer}
+.fb{min-height:3.4em;margin:16px auto 0;font-weight:600;max-width:46ch}
+.ok{color:var(--green)}.no{color:var(--red)}
+.tool{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.tool label{display:flex;justify-content:space-between;margin-top:12px;font-weight:600}
+.tool input[type=range]{width:100%;accent-color:var(--blue)}
+.out b{display:block;font-size:3rem;font-weight:800;color:var(--blue);line-height:1.2}
+.lvl{display:inline-block;margin-top:8px;padding:0 14px;border-radius:999px;font-weight:800;font-size:.9rem;color:#fff}
+.scan input{width:100%;max-width:520px;padding:12px 16px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin-bottom:12px}
+.res{margin-top:16px;font-weight:600;min-height:3em;max-width:62ch}
+.plan{list-style:none;padding:0;margin:0 0 16px;display:grid;gap:10px}
+.plan label{display:flex;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;cursor:pointer;align-items:flex-start}
+.plan input{width:20px;height:20px;margin-top:6px;accent-color:var(--green)}
+.meter{height:12px;background:var(--line);border-radius:6px;overflow:hidden;max-width:420px}
+.meter i{display:block;height:100%;width:0;background:var(--green);transition:width .4s}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.goal{color:#fff;border-radius:10px;padding:20px}
+.goal b{font-size:2.8rem;line-height:1;display:block}
+.goal p{margin:6px 0 0;font-size:.93rem;line-height:1.6}
+footer{background:var(--hero);color:#9fb8c3;padding:36px 0;font-size:.9rem}
+footer span{display:inline-block;background:rgba(255,255,255,.1);border-radius:999px;padding:0 12px;margin:2px}
+.panel,.game,.tool,.scan,.stat,.sol div,.g,.today,.plan label{background:var(--glass);border-color:var(--gl);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+#bub{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}.bb{position:absolute;bottom:-140px;border-radius:50%;background:var(--blue);opacity:.08;animation:up 20s linear infinite}@keyframes up{to{transform:translateY(-120vh)}}
+.btn{background:linear-gradient(135deg,#f2c230,#f59e0b)}.meter i{background:linear-gradient(90deg,var(--green),var(--blue))}
+#arena{position:relative;height:340px;border-radius:14px;overflow:hidden;background:linear-gradient(#6ccaee,#0b4a7a);border:1px solid var(--gl);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.hud{display:flex;gap:22px;flex-wrap:wrap;font-weight:800;margin-bottom:10px}
+.it{position:absolute;top:-70px;font-size:2.6rem;line-height:1;background:none;border:0;cursor:pointer;padding:14px;touch-action:none;z-index:1}
+#ov{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(7,21,30,.6);color:#fff;text-align:center;padding:16px;font-weight:700;font-size:1.2rem}
+.it.sm{font-size:1.5rem}
+#arena{transition:box-shadow .15s}#arena.fg{box-shadow:inset 0 0 50px 10px rgba(80,255,140,.55)}#arena.fr{box-shadow:inset 0 0 50px 10px rgba(255,70,60,.65)}
+.pop{position:absolute;z-index:3;pointer-events:none;font-weight:800;font-size:1.6rem;text-shadow:0 2px 6px rgba(0,0,0,.5);animation:pp .8s ease-out forwards}.pop.g{color:#8dffa8}.pop.r{color:#ff7468}@keyframes pp{to{transform:translateY(-55px);opacity:0}}
+.it{animation:wb 1s ease-in-out infinite alternate}@keyframes wb{from{rotate:-14deg}to{rotate:14deg}}
+#arena::after{content:"";position:absolute;inset:auto 0 0;height:46px;background:repeating-radial-gradient(circle at 20px 0,transparent 0 14px,rgba(255,255,255,.2) 15px 17px);animation:wv 4s linear infinite;pointer-events:none}@keyframes wv{to{background-position-x:40px}}
+#arena.sk{animation:sk .26s}@keyframes sk{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+.pt{position:absolute;width:9px;height:9px;border-radius:50%;pointer-events:none;z-index:3;animation:bt .6s ease-out forwards}@keyframes bt{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.bn{position:absolute;inset:38% 0 auto;text-align:center;font-size:2rem;font-weight:800;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.6);pointer-events:none;z-index:3;animation:bnn 1s ease-out forwards}@keyframes bnn{0%{transform:scale(.5);opacity:0}25%{transform:scale(1.1);opacity:1}100%{transform:scale(1) translateY(-30px);opacity:0}}
+@media (prefers-reduced-motion:reduce){#arena::after,.it,#arena.sk{animation:none}}
+.sb{height:14px;background:var(--line);border-radius:7px;overflow:hidden}.sb i{display:block;height:100%}
+.ch{display:block;width:100%;text-align:start;margin:8px 0;font:700 1rem Cairo,sans-serif;padding:12px 16px;border-radius:10px;border:2px solid var(--blue);background:var(--glass);color:var(--ink);cursor:pointer}.ch:hover{background:var(--blue);color:#fff}
+.lesson{background:var(--glass);border-inline-start:5px solid var(--cap);border-radius:8px;padding:10px 14px;margin:10px 0;font-weight:600}
+.mem{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:420px;margin:12px auto}
+.mc{aspect-ratio:1;font-size:2rem;border-radius:12px;border:2px solid var(--blue);background:var(--glass);color:var(--ink);cursor:pointer}.mc.on{background:var(--cap);color:#0a2230}.mc.ok{background:var(--green);color:#fff;border-color:var(--green)}
+@media (max-width:760px){.tool{grid-template-columns:1fr}section{padding:44px 0}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.meter i{transition:none}.bb{animation:none}}
+
+/* ===== لعبة: عربية النظافة ===== */
+#cr_ar{position:relative;height:430px;max-width:560px;margin:0 auto;border-radius:14px;overflow:hidden;direction:ltr;background:linear-gradient(#b9c0c6 0 12%,#3b4047 12% 88%,#b9c0c6 88%);border:1px solid var(--gl);user-select:none;-webkit-user-select:none;touch-action:none;transition:box-shadow .15s}
+#cr_ar::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;background:repeating-linear-gradient(90deg,#fff 0 28px,transparent 28px 60px);opacity:.55;pointer-events:none}
+#cr_ar.hit{box-shadow:inset 0 0 60px 12px rgba(255,70,60,.7)}
+#cr_ar.fg{box-shadow:inset 0 0 60px 12px rgba(80,255,140,.5)}
+.crt,.crc,#cr_t{position:absolute;line-height:1;pointer-events:none}
+.crt{font-size:1.7rem;z-index:1}.crc{font-size:2.4rem;z-index:2}#cr_t{font-size:2.8rem;z-index:3}
+#cr_d{position:absolute;right:6px;top:6px;z-index:1;background:var(--green);color:#fff;border-radius:8px;padding:2px 12px;font-size:.85rem;font-weight:800;direction:rtl;pointer-events:none}
+#cr_ov{position:absolute;inset:0;z-index:5;direction:rtl;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(7,21,30,.7);color:#fff;text-align:center;padding:16px;font-weight:700;font-size:1.2rem}
+</style>
+</head>
+<body>
+<div id="bar"></div><div id="bub" aria-hidden="true"></div>
+<nav><div class="wrap"><b>PlasticLess</b><a href="#solve">حلول</a><a href="#guide">التدوير</a><a href="#sort">فرز</a><a href="#play">لعبة</a><a href="#planet">ألعاب الكوكب</a><a href="#calc">بصمتك</a><a href="#scan">فاحص</a><a href="#plan">خطة 7 أيام</a><button id="th" aria-label="تغيير الوضع">🌙</button></div></nav>
+
+<header class="hero"><div class="wrap">
+<h1>بلاستيك أقل، كوكب أنظف</h1>
+<p>استخدام لمرة واحدة، وتخلص خاطئ، وتدوير محدود: والنتيجة بلاستيك في الأنهار والبحار وفي أجسام الكائنات الحية. هنا ستجد أدوات تغيّر عاداتك فعلًا، لا معلومات فقط.</p>
+<div class="counter">
+<a class="btn" href="#calc">احسب بصمتك</a>
+</div></div>
+<svg class="wave" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 50 C200 100 350 0 600 40 S1000 90 1200 30 V90 H0Z"/></svg>
+</header>
+
+<section style="padding-top:20px"><div class="wrap">
+<h2>أرقام المشكلة</h2>
+<div class="stats">
+<div class="stat"><b>430+ مليون</b><span>طن بلاستيك يُنتج سنويًا</span></div>
+<div class="stat"><b>~11 مليون</b><span>طن تصل إلى المحيطات كل عام</span></div>
+<div class="stat"><b>~9%</b><span>فقط من البلاستيك أُعيد تدويره عالميًا</span></div>
+<div class="stat"><b>مئات السنين</b><span>يحتاجها البلاستيك ليتحلل، ويتفتت إلى ميكروبلاستيك</span></div>
+</div></div></section>
+
+<section id="solve" class="alt"><div class="wrap">
+<h2>اختر مكانك واحصل على الحل</h2>
+<p>لكل مكان مشكلته، وكل حل مرتبط بهدف من أهداف التنمية المستدامة.</p>
+<div class="tabs" role="tablist" id="tabs"></div>
+<div class="panel" id="panel" role="tabpanel" aria-live="polite"></div>
+</div></section>
+
+<section id="guide"><div class="wrap">
+<h2>دليل رموز البلاستيك من 1 إلى 7</h2>
+<p>ابحث عن الرقم داخل المثلث أسفل العبوة. قواعد القبول تختلف حسب مدينتك، فاسأل جهة الجمع المحلية.</p>
+<div class="guide" id="guideGrid"></div>
+</div></section>
+
+<section id="sort" class="alt"><div class="wrap">
+<h2>لعبة الفرز: أين يذهب هذا؟</h2>
+<p>الفرز الصحيح يرفع فرصة التدوير. جرّب معرفتك في 7 أسئلة.</p>
+<div class="game" id="game"></div>
+</div></section>
+
+<section id="play"><div class="wrap">
+<h2>لعبة: نظّف البحر</h2>
+<p>نظّف المحيط خلال 45 ثانية. التقط ⏱ للوقت الإضافي و🌊 لموجة تنظّف كل ما على الشاشة. البلاستيك +10، والميكروبلاستيك الصغير 🔹 +25، وشبكة الصيد المهجورة 🕸️ +50. كل 5 ضربات متتالية ترفع المضاعف حتى ×5. الكائن البحري يكلفك 20 نقطة وروحًا من 3، والقطعة التي تصل للقاع تخصم 5 وتكسر الكومبو.</p>
+<div class="hud"><span>النقاط: <b id="sc">0</b></span><span>الوقت: <b id="tm">45</b></span><span>الأرواح: <b id="lv">❤️❤️❤️</b></span><span>الكومبو: <b id="cb">×1</b></span><span>أعلى نتيجة: <b id="hs">0</b></span><button id="snd" aria-label="تشغيل أو إيقاف الصوت" style="background:none;border:2px solid var(--blue);border-radius:8px;cursor:pointer;font-size:1rem;padding:0 10px;color:var(--ink)">🔊</button></div>
+<div id="arena"><div id="ov"><div id="ovt">جاهز تنظّف البحر؟</div><button class="btn" id="start">العب</button></div></div>
+</div></section>
+
+<section id="planet" class="alt"><div class="wrap">
+<h2>ألعاب الكوكب</h2>
+<p>ثلاث ألعاب بأفكار مختلفة: قيادة عربية نظافة تجري وراء البلاستيك في الشارع، ولعبة تدير فيها ملف النفايات في مدينة كاملة، وذاكرة تكشف معلومة مع كل زوج. اختر لعبة وابدأ.</p>
+<div class="tabs" id="gt" role="tablist"><button data-g="sg" aria-selected="true">عربية النظافة</button><button data-g="ag" aria-selected="false">مدير المدينة</button><button data-g="mg" aria-selected="false">ذاكرة الكوكب</button></div>
+<div class="game" id="sg">
+<p style="margin-inline:auto">أنت تقود عربية نظافة في شارع مزدحم. اضغط أو اسحب بإصبعك أو الفأرة لتتجه العربية إلى هناك (أو استخدم الأسهم وWASD). اجمع البلاستيك المتناثر، والحمولة 8 قطع فقط، ثم اذهب إلى 🟩 محطة الفرز أعلى اليمين لتفريغها. احذر 🛺 🚕 🚌 العابرة: الاصطدام يخسّرك روحًا ونصف حمولتك. المطلوب فرز 30 قطعة خلال 75 ثانية.</p>
+<div class="hud" style="justify-content:center"><span>النقاط: <b id="cr_sc">0</b></span><span>الوقت: <b id="cr_tm">75</b></span><span>الأرواح: <b id="cr_lv">❤️❤️❤️</b></span><span>الحمولة: <b id="cr_ld">0/8</b></span><span>أعلى نتيجة: <b id="cr_hi">0</b></span></div>
+<div style="font-size:.9rem;font-weight:600;margin:4px 0">نظافة الشارع</div>
+<div class="meter" style="margin:0 auto 12px" role="progressbar" aria-label="نظافة الشارع" aria-valuemin="0" aria-valuemax="100"><i id="cr_cm"></i></div>
+<div id="cr_ar"><div id="cr_d">♻️ محطة الفرز</div><div id="cr_ov"><div id="cr_ot">جاهز تنظّف الشارع؟</div><button class="btn" id="cr_go">ابدأ القيادة</button></div></div>
+</div>
+<div class="game" id="ag" style="text-align:start" hidden></div>
+<div class="game" id="mg" hidden></div>
+</div></section>
+
+<section id="calc"><div class="wrap">
+<h2>احسب بصمتك البلاستيكية</h2>
+<p>اختر الفترة (يوم أو أسبوع أو شهر أو سنة) وحرّك المؤشرات حسب استهلاكك فيها، وشاهد كم توفر لو استبدلت نصفها بأدوات قابلة لإعادة الاستخدام.</p>
+<div class="tool"><div><div class="tabs" id="per" role="group" aria-label="الفترة"></div><div id="sliders"></div></div>
+<div class="out" aria-live="polite"><span>إجمالي البلاستيك في الفترة المختارة</span><b id="kg">0</b><span id="items"></span><br><span class="lvl" id="lvl"></span><p id="adv" style="margin-top:10px;font-size:.95rem;color:var(--muted)"></p>
+<div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)">توفير سنوي بنصف الاستبدال:<br><strong id="saved" style="font-size:1.6rem;color:var(--green)"></strong></div></div></div>
+<p style="font-size:.85rem;color:var(--muted);margin-top:12px">أوزان تقريبية: زجاجة 20 جم، كيس 5 جم، كوب بغطاء 10 جم، علبة طعام 30 جم، شفاطة أو أدوات 4 جم.</p>
+</div></section>
+
+<section id="scan" class="alt"><div class="wrap">
+<h2>فاحص الميكروبلاستيك</h2>
+<p>الصق قائمة مكونات منتج التجميل أو اكتب نوعه (مقشر، معجون، لمّاع). الفاحص يبحث عن مكونات بلاستيكية معروفة.</p>
+<div class="scan">
+<input id="pin" placeholder="مثال: Polyethylene, Glycerin, Aqua أو مقشر للوجه" aria-label="المنتج أو المكونات">
+<br><button class="btn" id="go">افحص</button>
+<div class="res" id="res" aria-live="polite"></div>
+<p style="font-size:.82rem;color:var(--muted);margin:10px 0 0">الفحص بالكلمات المفتاحية وليس تحليلًا مخبريًا. المرجع الأدق هو قائمة المكونات على العبوة.</p>
+</div></div></section>
+
+<section id="plan"><div class="wrap">
+<h2>خطة 7 أيام: عادة جديدة كل يوم</h2>
+<ul class="plan" id="planList"></ul>
+<div class="meter" id="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i id="mfill"></i></div>
+<p id="pmsg" style="margin-top:10px;font-weight:700">ابدأ باليوم الأول.</p>
+</div></section>
+
+<section class="alt"><div class="wrap">
+<h2>أهداف التنمية المستدامة المرتبطة</h2>
+<div class="goals">
+<div class="goal" style="background:var(--s12)"><b>12</b><strong>الاستهلاك والإنتاج المسؤولان</strong><p>الهدف الأساسي: تقليل النفايات وتحسين إعادة الاستخدام والتدوير.</p></div>
+<div class="goal" style="background:var(--s14)"><b>14</b><strong>الحياة تحت الماء</strong><p>تقليل وصول النفايات البلاستيكية إلى البحار والمحيطات.</p></div>
+<div class="goal" style="background:var(--s13)"><b>13</b><strong>العمل المناخي</strong><p>التوعية بتأثير إنتاج البلاستيك وإدارته على البيئة والمناخ.</p></div>
+</div></div></section>
+
+
+<script>
+(function(){var c=document.getElementById('bub');for(var i=0;i<12;i++){var d=document.createElement('div'),s=30+Math.random()*90;d.className='bb';d.style.cssText='width:'+s+'px;height:'+s+'px;left:'+Math.random()*100+'%;animation-duration:'+(14+Math.random()*14)+'s;animation-delay:-'+Math.random()*20+'s';c.appendChild(d)}})();
+(function(){var b=document.getElementById('bar');addEventListener('scroll',function(){var h=document.documentElement;b.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100||0)+'%'});
+var th=document.getElementById('th');th.onclick=function(){var d=document.documentElement,dark=d.getAttribute('data-theme')==='dark'||(!d.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);d.setAttribute('data-theme',dark?'light':'dark');th.textContent=dark?'🌙':'☀️'};
+})();
+
+var D={
+'البيت':{p:'مطبخ وحمام مليئان بزجاجات وأكياس وعبوات تُرمى بعد استخدام واحد.',s:[
+['خذ كيسًا قماشيًا','احتفظ بكيس في الحقيبة أو السيارة حتى لا تحتاج كيسًا جديدًا.',12],
+['عبوات كبيرة أو منتجات صلبة','شامبو وصابون صلب وعبوة كبيرة واحدة أقل بلاستيكًا من عدة صغيرة.',12],
+['افرز في كيسين','كيس للمواد القابلة للتدوير النظيفة وكيس للباقي.',12],
+['اغسل الملابس الصناعية أقل','تطلق ألياف بلاستيكية دقيقة تصل إلى البحر. اغسلها بحمولة كاملة.',14]],t:'اليوم: استبدل زجاجة مياه واحدة بزجاجة قابلة لإعادة التعبئة.'},
+'المدرسة والجامعة':{p:'أكواب وزجاجات وأكياس وجبات خفيفة تملأ الفناء وسلال القمامة.',s:[
+['نقطة تعبئة مياه','اطلب من الإدارة جهاز مياه للتعبئة بدل بيع الزجاجات.',12],
+['حملة فرز في الفصل','ضع صندوقين مصنّفين وسابق بين الفصول على أنظف يوم.',12],
+['يوم تنظيف شاطئ','رحلة تطوعية شهرية تجمع البلاستيك قبل أن يتفتت.',14],
+['مشروع إبداعي','حوّل الأغطية والزجاجات إلى أصص زراعة أو مجسمات.',12]],t:'اليوم: اقترح على زملائك حملة «زجاجتي معي».'},
+'الشاطئ والمدينة':{p:'قمامة على الكورنيش والشاطئ وفي المصارف، ثم تحملها الأمواج والمياه إلى البحر.',s:[
+['لا ترمِ شيئًا على الرمل','أي كيس يُترك يصل للماء مع أول موجة. خذ نفاياتك معك.',14],
+['نظّف 10 دقائق','التقط 10 قطع قبل أن تغادر، وصوّر ما وجدت للتوعية.',14],
+['اطلب سلالًا وفرزًا','اقترح على الحي زيادة السلال ورفع القمامة بانتظام.',14],
+['ادعم المبادرات المحلية','شارك في فرق التنظيف والمبادرات التي تعيد التدوير.',14]],t:'اليوم: ابحث عن مبادرة تنظيف قريبة منك وانضم إليها.'},
+'المحل والشركة':{p:'تغليف زائد وأكياس وأكواب ومستلزمات تُستخدم مرة واحدة.',s:[
+['تغليف أقل وأذكى','استخدم عبوات قابلة للتدوير وبدون طبقات مختلطة.',12],
+['خصم لمن يحضر كوبه','حافز بسيط يقلل أكواب الاستخدام الواحد بسرعة.',12],
+['نقطة استرجاع','اجمع العبوات الفارغة وسلّمها لمعيد تدوير معتمد.',12],
+['موردون محليون','نقل أقل وتغليف أقل وتأثير أقل على المدينة.',13]],t:'اليوم: احسب كم كيسًا يستهلك محلك أسبوعيًا.'}
+};
+(function(){
+var tabs=document.getElementById('tabs'),panel=document.getElementById('panel'),keys=Object.keys(D);
+function show(k){
+ [].forEach.call(tabs.children,function(b){b.setAttribute('aria-selected',b.textContent===k)});
+ var d=D[k],h='<div class="prob"><b>المشكلة:</b> '+d.p+'</div><div class="sol">';
+ d.s.forEach(function(x){h+='<div><h4>'+x[0]+'</h4><p>'+x[1]+'</p><span class="chip c'+x[2]+'">هدف '+x[2]+'</span></div>'});
+ panel.innerHTML=h+'</div><div class="today">'+d.t+'</div>';
+}
+keys.forEach(function(k){var b=document.createElement('button');b.textContent=k;b.setAttribute('role','tab');b.onclick=function(){show(k)};tabs.appendChild(b)});
+show(keys[0]);
+
+var G=[[1,'PET','زجاجات المياه والمشروبات.','اشطفها وافصل الغطاء.','y','قابل للتدوير بسهولة'],
+[2,'HDPE','زجاجات الحليب والشامبو والمنظفات.','فرّغها ونظّفها.','y','قابل للتدوير بسهولة'],
+[3,'PVC','أنابيب وبطاقات وبعض التغليف.','نادرًا ما تقبله برامج التدوير. قلل استخدامه.','n','صعب التدوير'],
+[4,'LDPE','أكياس التسوق والأغلفة الرقيقة.','بعض المحلات تستقبلها. الأفضل إعادة استخدامها.','p','قابل جزئيًا'],
+[5,'PP','علب الزبادي والأغطية والحاويات.','نظّفه قبل الرمي.','y','قابل للتدوير'],
+[6,'PS','الفوم والأكواب والأطباق البيضاء.','تجنبه واستبدله ببدائل.','n','يُفضل تجنبه'],
+[7,'أخرى','مزيج بلاستيك أو طبقات متعددة.','غالبًا لا يُدوَّر تقليديًا.','n','غير قابل غالبًا']],gh='';
+G.forEach(function(g){gh+='<div class="g '+g[4]+'"><h3><i>'+g[0]+'</i>'+g[1]+'</h3><p>'+g[2]+'</p><p>'+g[3]+'</p><strong>'+g[5]+'</strong></div>'});
+document.getElementById('guideGrid').innerHTML=gh;
+})();
+
+(function(){
+var Q=[['زجاجة مياه فارغة','recycle','اشطفها وسلّمها للتدوير.'],['كيس بلاستيك نظيف','reuse','استخدمه ككيس نفايات أو للتسوق مرة أخرى.'],['كيس شيبس','trash','مصنوع من طبقات مختلطة ولا يُدوَّر عادة.'],['علبة طعام سليمة بغطاء','reuse','تصلح للتخزين وحفظ الوجبات سنوات.'],['كوب قهوة ورقي','trash','مبطن بالبلاستيك فيصعب تدويره.'],['زجاجة شامبو فارغة','recycle','اشطفها وافرزها مع البلاستيك.'],['شفاطة بلاستيك','trash','صغيرة جدًا وتفلت من الفرز. الأفضل رفضها.']];
+var L={recycle:'تدوير',reuse:'إعادة استخدام',trash:'نفايات عامة'},i=0,s=0,g=document.getElementById('game');
+function render(){
+ if(i>=Q.length){g.innerHTML='<div class="item">نتيجتك: '+s+' من '+Q.length+'</div><p class="fb" style="margin-inline:auto">'+(s>=6?'ممتاز! أنت جاهز لتعلّم غيرك.':s>=4?'جيد، راجع الأخطاء وأعد المحاولة.':'لا بأس، الفرز مهارة تتحسن بالتكرار.')+'</p><button class="btn" id="again">العب مرة أخرى</button>';
+  document.getElementById('again').onclick=function(){i=0;s=0;render()};return}
+ g.innerHTML='<div>سؤال '+(i+1)+' من '+Q.length+'</div><div class="item">'+Q[i][0]+'</div><div class="opts"></div><div class="fb" aria-live="polite"></div>';
+ var o=g.querySelector('.opts');
+ Object.keys(L).forEach(function(k){var b=document.createElement('button');b.textContent=L[k];b.onclick=function(){
+  var ok=k===Q[i][1];if(ok)s++;
+  [].forEach.call(o.children,function(x){x.disabled=true});
+  g.querySelector('.fb').innerHTML='<span class="'+(ok?'ok':'no')+'">'+(ok?'صحيح! ':'الإجابة: '+L[Q[i][1]]+'. ')+'</span>'+Q[i][2]+'<br><button class="btn" style="margin-top:10px" id="nx">التالي</button>';
+  document.getElementById('nx').onclick=function(){i++;render()};document.getElementById('nx').focus();
+ };o.appendChild(b)});
+}
+render();
+})();
+
+(function(){
+var it=[['زجاجات بلاستيك',20,1],['أكياس بلاستيك',5,2],['أكواب بغطاء',10,1],['علب طعام جاهز',30,1],['شفاطات وأدوات',4,1]],v=[],sl=[],box=document.getElementById('sliders'),PR=[['اليوم','في اليوم',1,10,[1,2,1,1,1]],['الأسبوع','في الأسبوع',7,30,[5,4,3,2,2]],['الشهر','في الشهر',30,100,[20,15,10,6,8]],['السنة','في السنة',365,600,[200,150,100,40,50]]],cur=0,pb=document.getElementById('per');
+it.forEach(function(x,i){v[i]=x[2];
+ var l=document.createElement('label');l.innerHTML='<span>'+x[0]+' <em class="pl" style="font-style:normal;color:var(--muted)">في اليوم</em></span><b id="v'+i+'">'+x[2]+'</b>';
+ var s=document.createElement('input');s.type='range';s.min=0;s.max=10;s.value=x[2];sl[i]=s;s.setAttribute('aria-label',x[0]);
+ s.oninput=function(){v[i]=+s.value;document.getElementById('v'+i).textContent=s.value;c()};box.appendChild(l);box.appendChild(s)});
+function c(){var g=0,n=0;it.forEach(function(x,i){g+=v[i]*x[1];n+=v[i]});var kg=g*365/PR[cur][2]/1000,l=document.getElementById('lvl'),a;
+ document.getElementById('kg').textContent=g<1000?Math.round(g)+' جم':(g/1000).toFixed(1)+' كجم';
+ document.getElementById('items').textContent=n+' قطعة '+PR[cur][1]+' (تعادل نحو '+Math.round(n*365/PR[cur][2])+' قطعة و'+kg.toFixed(1)+' كجم في السنة)';
+ document.getElementById('saved').textContent=(kg/2).toFixed(1)+' كجم';
+ if(kg<5){l.textContent='منخفض';l.style.background='var(--green)';a='ممتاز. استمر وشارك عاداتك مع غيرك.'}
+ else if(kg<12){l.textContent='متوسط';l.style.background='var(--s11)';a='ابدأ بالزجاجات والأكياس، فهي أسهل استبدال.'}
+ else{l.textContent='مرتفع';l.style.background='var(--red)';a='جرّب أسبوعًا بدون زجاجات أو أكياس، وسترى الفرق.'}
+ document.getElementById('adv').textContent=a;}
+function setP(k){cur=k;[].forEach.call(pb.children,function(b,j){b.setAttribute('aria-selected',j===k)});[].forEach.call(document.querySelectorAll('.pl'),function(e){e.textContent=PR[k][1]});it.forEach(function(x,i){sl[i].max=PR[k][3];sl[i].value=v[i]=PR[k][4][i];document.getElementById('v'+i).textContent=v[i]});c()}
+PR.forEach(function(p,j){var b=document.createElement('button');b.textContent=p[0];b.onclick=function(){setP(j)};pb.appendChild(b)});
+setP(0);
+})();
+
+(function(){
+var I=['polyethylene','polypropylene','polystyrene','polyethylene terephthalate','nylon','pmma','polymethyl methacrylate','acrylates copolymer','acrylates crosspolymer','polyurethane','pet','ptfe','بولي إيثيلين','بولي بروبلين','نايلون'],
+T=['مقشر','scrub','peeling','exfoliat','glitter','لمّاع','ليمع','microbead'],
+r=document.getElementById('res'),p=document.getElementById('pin');
+function go(){var q=p.value.trim().toLowerCase(),f=[],t=[];
+ if(!q){r.className='res no';r.textContent='اكتب اسم منتج أو الصق قائمة مكوناته أولًا.';return}
+ I.forEach(function(x){if(q.indexOf(x)>-1)f.push(x)});T.forEach(function(x){if(q.indexOf(x)>-1)t.push(x)});
+ if(f.length){r.className='res no';r.textContent='وُجدت مكونات بلاستيكية محتملة: '+f.join('، ')+'. ابحث عن بديل يعتمد على مقشرات طبيعية مثل السكر أو الملح أو نوى الفاكهة المطحونة.'}
+ else if(t.length){r.className='res no';r.textContent='هذا النوع من المنتجات (المقشرات واللمّاع) كثيرًا ما يحتوي بلاستيكًا دقيقًا. افحص قائمة المكونات على العبوة بحثًا عن Polyethylene أو Nylon أو Acrylates.'}
+ else{r.className='res ok';r.textContent='لم أجد مؤشرات واضحة. للتأكد افحص العبوة بحثًا عن Polyethylene وPolypropylene وNylon وPMMA.'}}
+document.getElementById('go').onclick=go;p.onkeydown=function(e){if(e.key==='Enter')go()};
+})();
+
+(function(){
+var P=['اليوم 1: احمل زجاجة وكيسًا قابلين لإعادة الاستخدام','اليوم 2: ارفض الشفاطة والأدوات البلاستيكية','اليوم 3: افرز نفايات البيت في كيسين','اليوم 4: اشترِ شيئًا واحدًا بدون تغليف','اليوم 5: التقط 10 قطع نفايات من الشارع أو الشاطئ','اليوم 6: علّم شخصًا واحدًا لعبة الفرز','اليوم 7: اطلب من مدرستك أو عملك أو حيّك تحسينًا واحدًا'],
+M=['ابدأ باليوم الأول.','بداية جيدة!','يومان! استمر.','ثلاثة أيام، العادة تتكون.','أكثر من النصف.','خطوة واحدة تفصلك.','قاربت على الانتهاء.','أنهيت الخطة! شارك التحدي مع أصدقائك.'],
+u=document.getElementById('planList'),cb=[],saved=[];
+try{saved=JSON.parse(localStorage.getItem('pl_plan')||'[]')}catch(e){}
+function upd(){var d=cb.filter(function(c){return c.checked}).length,p=Math.round(d/P.length*100);
+ document.getElementById('mfill').style.width=p+'%';document.getElementById('meter').setAttribute('aria-valuenow',p);document.getElementById('pmsg').textContent=M[d];
+ try{localStorage.setItem('pl_plan',JSON.stringify(cb.map(function(c){return c.checked})))}catch(e){}}
+P.forEach(function(t,i){var li=document.createElement('li');li.innerHTML='<label><input type="checkbox"><span>'+t+'</span></label>';
+ var c=li.querySelector('input');c.checked=!!saved[i];c.onchange=upd;cb.push(c);u.appendChild(li)});
+upd();
+})();
+(function(){
+var A=document.getElementById('arena'),ov=document.getElementById('ov'),ot=document.getElementById('ovt'),sc=document.getElementById('sc'),tm=document.getElementById('tm'),hs=document.getElementById('hs'),lv=document.getElementById('lv'),cb=document.getElementById('cb'),st=document.getElementById('start'),sn=document.getElementById('snd'),
+P=['🥤','🛍️','🧴','🍼','🥡'],F=['🐟','🐢','🐙','🐬'],
+OOPS=['آه! السلحفاة زعلت 🐢','أنقذوا السمكة! 🐟','ده مش بلاستيك 😅','الأخطبوط مش مبسوط 🐙'],
+FACTS=['البلاستيك لا يختفي، بل يتفتت إلى ميكروبلاستيك يدخل السلسلة الغذائية.','أقل من 10% من البلاستيك أُعيد تدويره عالميًا.','شباك الصيد المهجورة من أخطر نفايات البحر على الكائنات البحرية.','أغلب بلاستيك المحيطات يأتي من اليابسة عبر الأنهار والمصارف والرياح.'],
+T=45,s=0,t=T,lives=3,combo=0,got=0,miss=0,lvl=1,its=[],ti,sp,mi,on=false,best=0,AC=null,mute=false;
+try{best=+localStorage.getItem('pl_best')||0}catch(e){}
+hs.textContent=best;
+function tone(f,d,ty,g,to){if(mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var n=AC.currentTime,o=AC.createOscillator(),q=AC.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,n);if(to)o.frequency.exponentialRampToValueAtTime(to,n+d);q.gain.setValueAtTime(g||.1,n);q.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(q);q.connect(AC.destination);o.start();o.stop(n+d)}catch(e){}}
+sn.onclick=function(){mute=!mute;sn.textContent=mute?'🔇':'🔊'};
+function mult(){return Math.min(5,1+Math.floor(combo/5))}
+function hud(){sc.textContent=s;tm.textContent=t;lv.textContent=lives>0?'❤️'.repeat(lives):'💔';cb.textContent='×'+mult()}
+function add(c,x,l,y,tx){var p=document.createElement('div');p.className=c;if(tx)p.textContent=tx;p.style.left=l+'px';p.style.top=y+'px';A.appendChild(p);return p}
+function gone(p,ms){setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p)},ms)}
+function pop(x,c,l,y){var p=add('pop '+c,0,Math.max(4,Math.min(l,A.clientWidth-90)),Math.max(4,Math.min(y,A.clientHeight-44)),x);gone(p,800)}
+function burst(l,y,col){for(var i=0;i<8;i++){var a=i/8*6.283,p=add('pt',0,l+20,y+20);p.style.background=col;p.style.setProperty('--dx',Math.cos(a)*45+'px');p.style.setProperty('--dy',Math.sin(a)*45+'px');gone(p,600)}}
+function banner(x){var b=document.createElement('div');b.className='bn';b.textContent=x;A.appendChild(b);gone(b,1000)}
+function flash(c){A.classList.add(c);setTimeout(function(){A.classList.remove(c)},180)}
+function shake(){A.classList.add('sk');setTimeout(function(){A.classList.remove('sk')},270)}
+function rm(b){if(b.parentNode)b.parentNode.removeChild(b);its=its.filter(function(x){return x!==b})}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function spawn(){var r=Math.random(),k=r<.18?'m':r<.25?'g':r<.36?'u':r<.41?'t':r<.45?'w':'p',b=document.createElement('button'),v0=2.2+(T-t)/10+Math.random()*1.6;
+ b.className='it'+(k==='u'?' sm':'');b.textContent=k==='m'?pick(F):k==='g'?'🕸️':k==='u'?'🔹':k==='t'?'⏱':k==='w'?'🌊':pick(P);
+ b.setAttribute('aria-label',k==='m'?'كائن بحري، لا تلمسه':k==='t'?'وقت إضافي':k==='w'?'موجة تنظيف':'بلاستيك');
+ b.style.left=Math.random()*Math.max(A.clientWidth-64,10)+'px';b._k=k;b._y=-70;b._v=v0*(k==='g'||k==='u'||k==='t'||k==='w'?1.5:1);
+ function hit(e){if(e)e.preventDefault();if(b._d||!on)return;b._d=1;var x=b.offsetLeft,y=b._y;
+  if(k==='m'){s=Math.max(0,s-20);lives--;combo=0;pop('-20 💔','r',x,y);burst(x,y,'#ff6b5e');flash('fr');shake();tone(220,.35,'sawtooth',.12,80);banner(pick(OOPS));try{navigator.vibrate&&navigator.vibrate(60)}catch(z){}}
+  else if(k==='t'){t+=5;pop('+5 ثوانٍ','g',x,y);burst(x,y,'#ffe066');tone(500,.3,'square',.07,1100);banner('⏱ وقت إضافي')}
+  else if(k==='w'){burst(x,y,'#7fd6ff');tone(300,.5,'triangle',.12,900);banner('🌊 موجة تنظيف!');its.slice().forEach(function(o){if(o!==b&&'pug'.indexOf(o._k)>-1)o._hit()})}
+  else{combo++;var g=(k==='g'?50:k==='u'?25:10)*mult();s+=g;got++;pop('+'+g,'g',x,y);burst(x,y,'#8dffa8');flash('fg');tone(520+Math.min(combo,20)*30,.12,'triangle',.12,900);if(combo%5===0){banner(mult()>=5?'🔥 ماكسيمم ×5!':'🔥 كومبو ×'+mult());tone(880,.25,'square',.06,1400)}}
+  rm(b);hud();if(lives<=0)end()}
+ b._hit=hit;b.onpointerdown=hit;b.onclick=hit;A.appendChild(b);its.push(b)}
+function move(){its.slice().forEach(function(b){b._y+=b._v;b.style.top=b._y+'px';if(b._y>A.clientHeight-30){if('pug'.indexOf(b._k)>-1){s=Math.max(0,s-5);combo=0;miss++;pop('-5','r',b.offsetLeft,A.clientHeight-44);hud()}rm(b)}})}
+function loop(){if(!on)return;spawn();sp=setTimeout(loop,Math.max(280,750-(T-t)*10))}
+function end(){if(!on)return;on=false;clearInterval(ti);clearInterval(mi);clearTimeout(sp);its.slice().forEach(rm);
+ if(s>best){best=s;try{localStorage.setItem('pl_best',s)}catch(e){}hs.textContent=s}
+ var rk=s>=500?'بطل المحيطات':s>=250?'خبير بيئة':s>=100?'متطوع نشط':'مبتدئ',acc=got+miss?Math.round(got/(got+miss)*100):0;
+ tone(392,.2,'triangle',.1);setTimeout(function(){tone(330,.3,'triangle',.1)},200);
+ ot.style.fontSize='';ot.innerHTML='<div>'+(lives<=0?'خسرت كل أرواحك':'انتهى الوقت')+'</div><div>النقاط: '+s+' · '+rk+'</div><div style="font-size:.95rem;font-weight:600">جمعت '+got+' وفاتك '+miss+' · الدقة '+acc+'%</div><div style="font-size:.9rem;font-weight:400;max-width:44ch">هل تعلم؟ '+pick(FACTS)+'</div>';
+ st.style.display='';st.textContent='العب مرة أخرى';ov.style.display='flex';st.focus()}
+function begin(){on=true;ov.style.display='none';ti=setInterval(function(){t--;var l=1+Math.floor((T-t)/15);if(l!==lvl&&t>0){lvl=l;banner('المستوى '+l);tone(700,.2,'square',.06,1000)}hud();if(t<=0)end()},1000);mi=setInterval(move,30);loop()}
+st.onclick=function(){s=0;t=T;lives=3;combo=0;got=0;miss=0;lvl=1;its.slice().forEach(rm);hud();st.style.display='none';ot.style.fontSize='3rem';
+ var c=['3','2','1','ابدأ!'],i=0;(function nx(){ot.textContent=c[i];tone(i<3?440:880,.15,'square',.06);if(++i<c.length)setTimeout(nx,650);else setTimeout(begin,500)})()};
+})();
+
+/* ===== لعبة: عربية النظافة (قيادة حرة خلف البلاستيك) ===== */
+(function(){
+var A=document.getElementById('cr_ar'),ov=document.getElementById('cr_ov'),ot=document.getElementById('cr_ot'),go=document.getElementById('cr_go'),
+$=function(i){return document.getElementById(i)},
+TR=['🥤','🛍️','🧴','🍼','🥡','🧃'],CV=['🛺','🚕','🚌','🚐'],
+FA=['الفرز من المصدر يرفع كثيرًا فرصة تدوير البلاستيك.','أغلب بلاستيك البحار يبدأ رحلته من الشوارع والمصارف.','البلاستيك المتروك في الشارع يتفتت إلى ميكروبلاستيك مع الشمس والمطر.','محطات فرز قريبة من الأحياء تقلل رمي النفايات في الطرق.'],
+CAP=8,T=75,GOAL=30,SP=5,
+s=0,t=T,lives=3,load=0,done=0,tx=0,ty=0,gx=0,gy=0,face=0,inv=0,tr=[],cars=[],on=false,P=null,tick=0,nc=0,lp,ck,best=0,K={};
+try{best=+localStorage.getItem('pl_car')||0}catch(e){}
+$('cr_hi').textContent=best;
+function W(){return A.clientWidth}function H(){return A.clientHeight}
+function pk(a){return a[Math.floor(Math.random()*a.length)]}
+function ps(el,x,y,r){el.style.left=(x-r)+'px';el.style.top=(y-r)+'px'}
+function hud(){$('cr_sc').textContent=s;$('cr_tm').textContent=t;$('cr_lv').textContent=lives>0?'❤️'.repeat(lives):'💔';$('cr_ld').textContent=load+'/'+CAP;var p=Math.min(100,Math.round(done/GOAL*100));$('cr_cm').style.width=p+'%';$('cr_cm').parentNode.setAttribute('aria-valuenow',p)}
+function pop(x,c,px,py){var p=document.createElement('div');p.className='pop '+c;p.textContent=x;p.style.left=Math.max(4,Math.min(px-40,W()-150))+'px';p.style.top=Math.max(4,py-30)+'px';A.appendChild(p);setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p)},800)}
+function ban(x){var b=document.createElement('div');b.className='bn';b.textContent=x;A.appendChild(b);setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b)},1000)}
+function fl(c){A.classList.add(c);setTimeout(function(){A.classList.remove(c)},200)}
+function addT(){if(tr.length>=12)return;var e=document.createElement('div'),x=24+Math.random()*(W()-48),y=72+Math.random()*(H()-96);e.className='crt';e.textContent=pk(TR);ps(e,x,y,14);A.appendChild(e);tr.push({e:e,x:x,y:y})}
+function addC(){var L=Math.random()<.5,e=document.createElement('div'),y=H()*(.2+Math.random()*.6);e.className='crc';e.textContent=pk(CV);if(!L)e.style.transform='scaleX(-1)';var o={e:e,x:L?W()+30:-30,y:y,v:(L?-1:1)*(2.6+Math.random()*2.2+(T-t)/40)};ps(e,o.x,o.y,18);A.appendChild(e);cars.push(o)}
+function clear(){tr.forEach(function(o){if(o.e.parentNode)o.e.parentNode.removeChild(o.e)});cars.forEach(function(o){if(o.e.parentNode)o.e.parentNode.removeChild(o.e)});tr=[];cars=[]}
+function step(){if(A.offsetParent===null||!on)return;tick++;
+ var kx=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),ky=(K.arrowdown||K.s?1:0)-(K.arrowup||K.w?1:0),ox=tx,i;
+ if(kx||ky){var n=Math.hypot(kx,ky);tx+=kx/n*SP;ty+=ky/n*SP;gx=tx;gy=ty}
+ else{var ex=gx-tx,ey=gy-ty,d=Math.hypot(ex,ey);if(d>SP){tx+=ex/d*SP;ty+=ey/d*SP}else if(d>0){tx=gx;ty=gy}}
+ tx=Math.max(22,Math.min(W()-22,tx));ty=Math.max(22,Math.min(H()-22,ty));
+ if(tx>ox+.3)face=1;else if(tx<ox-.3)face=0;
+ ps(P,tx,ty,22);P.style.transform=face?'scaleX(-1)':'';
+ if(inv>0){inv--;P.style.opacity=inv%6<3?.35:1}else P.style.opacity=1;
+ for(i=tr.length-1;i>=0;i--){var o=tr[i];if(Math.hypot(o.x-tx,o.y-ty)<34){if(load<CAP){load++;s+=5;if(o.e.parentNode)o.e.parentNode.removeChild(o.e);tr.splice(i,1);pop('+5','g',o.x,o.y);hud()}else if(tick%40===0)pop('العربية ممتلئة! ♻️','r',tx,ty)}}
+ if(load>0&&tx>W()-130&&ty<68){var g=load*10+(load>=CAP?30:0);s+=g;done+=load;pop('تم الفرز +'+g,'g',tx-30,ty+30);fl('fg');load=0;hud();if(done>=GOAL)return end(true)}
+ for(i=cars.length-1;i>=0;i--){var c=cars[i];c.x+=c.v;ps(c.e,c.x,c.y,18);
+  if(c.x<-50||c.x>W()+50){if(c.e.parentNode)c.e.parentNode.removeChild(c.e);cars.splice(i,1);continue}
+  if(!inv&&Math.hypot(c.x-tx,c.y-ty)<36){lives--;inv=40;load-=Math.ceil(load/2);pop('اصطدام! 💥','r',tx,ty);fl('hit');hud();if(lives<=0)return end(false)}}
+ if(tick%20===0)addT();
+ if(--nc<=0){addC();nc=Math.max(45,110-(T-t))}
+}
+function end(win){if(!on)return;on=false;clearInterval(lp);clearInterval(ck);
+ if(win)s+=t*5;
+ if(s>best){best=s;try{localStorage.setItem('pl_car',s)}catch(e){}$('cr_hi').textContent=s}
+ var rk=s>=450?'بطل الشارع':s>=300?'سائق نظافة شاطر':s>=150?'متطوع نشيط':'مبتدئ';
+ hud();ot.style.fontSize='';
+ ot.innerHTML='<div>'+(win?'الشارع أصبح نظيفًا! 🎉':lives<=0?'اصطدمت كثيرًا!':'انتهى الوقت')+'</div><div>النقاط: '+s+' · '+rk+'</div><div style="font-size:.95rem;font-weight:600">فرزت '+done+' من '+GOAL+' قطعة</div><div style="font-size:.9rem;font-weight:400;max-width:42ch">هل تعلم؟ '+pk(FA)+'</div>';
+ go.style.display='';go.textContent='العب مرة أخرى';ov.style.display='flex';go.focus()}
+function begin(){on=true;ot.style.fontSize='';ov.style.display='none';
+ ck=setInterval(function(){if(A.offsetParent===null)return;t--;if(t===40)ban('بقي 40 ثانية! 🏁');hud();if(t<=0)end(false)},1000);
+ lp=setInterval(step,30)}
+go.onclick=function(){s=0;t=T;lives=3;load=0;done=0;inv=0;tick=0;nc=70;clear();if(P&&P.parentNode)P.parentNode.removeChild(P);
+ tx=gx=W()/2;ty=gy=H()*.62;P=document.createElement('div');P.id='cr_t';P.textContent='🚛';A.appendChild(P);ps(P,tx,ty,22);
+ for(var i=0;i<6;i++)addT();hud();go.style.display='none';ot.style.fontSize='3rem';
+ var c=['3','2','1','انطلق!'],i2=0;(function nx(){ot.textContent=c[i2];if(++i2<c.length)setTimeout(nx,600);else setTimeout(begin,450)})()};
+function tg(e){var r=A.getBoundingClientRect();gx=e.clientX-r.left;gy=e.clientY-r.top}
+A.addEventListener('pointerdown',function(e){if(on)tg(e)});
+A.addEventListener('pointermove',function(e){if(on&&e.buttons)tg(e)});
+document.addEventListener('keydown',function(e){if(!on||A.offsetParent===null)return;var k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown','a','d','w','s'].indexOf(k)>-1){K[k]=1;e.preventDefault()}});
+document.addEventListener('keyup',function(e){K[e.key.toLowerCase()]=0});
+})();
+
+/* ===== لعبة للكبار: مدير المدينة (ملف النفايات) ===== */
+(function(){
+var g=document.getElementById('ag'),B,S,E,i,L,yn,best=0,
+Z=[
+['السنة 1 · الميزانية الأولى','ورثت إدارة نفايات متهالكة في مدينة ساحلية: شاحنات قليلة ومقالب مكشوفة، وأمامك أول ميزانية.',[
+['شراء شاحنات وصناديق جديدة',{b:-6,s:6,e:4},null,'الجمع المنتظم هو الحلقة الأولى في السلسلة. بدونه لا ينفع فرز ولا تدوير.'],
+['حملة فرز من المصدر',{b:-3,s:2,e:3},{s:3,e:5},'الفرز من البيت يرفع جودة المواد المعاد تدويرها، لكن العادات تتغير ببطء، فيظهر أثر إضافي السنة القادمة.'],
+['خفض رسوم النظافة لكسب الرضا',{b:-1,s:9,e:-3},null,'رضا سريع، لكنه يقتطع من تمويل الخدمة ويضعفها لاحقًا.']]],
+['السنة 2 · العاملون غير الرسميين','آلاف الأسر تعيش على جمع النفايات وفرزها يدويًا خارج أي عقد رسمي، وتنقذ من المقالب جزءًا مهمًا من المواد القابلة للتدوير.',[
+['دمجهم بعقود وتدريب ومعدات',{b:-4,s:5,e:6},{s:3,e:3},'دمج القطاع غير الرسمي يرفع الكفاءة ويحمي سبل العيش، ويحتاج تنظيمًا طويل النفس.'],
+['التعاقد مع شركة كبيرة بدلًا منهم',{b:-2,s:-5,e:2},{b:2},'قد ترتفع الكفاءة، لكن إقصاء من يعتاشون على هذا العمل يولّد مقاومة اجتماعية.'],
+['ترك الوضع كما هو',{b:0,s:-2,e:-3},null,'عدم القرار قرار، والمشكلة تتراكم.']]],
+['السنة 3 · الأكياس البلاستيكية','الأكياس أحادية الاستخدام تملأ المصارف والشواطئ، وأصحاب المتاجر قلقون على المبيعات.',[
+['حظر كامل مع بدائل',{b:-1,s:-5,e:8},{e:3},'الحظر الواضح يعطي أثرًا أكبر من التطوع، لكنه يحتاج رقابة وبدائل رخيصة.'],
+['رسم رمزي على كل كيس',{b:3,s:-2,e:5},null,'تجارب كثيرة أظهرت أن رسمًا بسيطًا يخفض الاستهلاك بسرعة ويموّل برامج أخرى.'],
+['حملة تطوعية دون إلزام',{b:-1,s:3,e:1},null,'التوعية وحدها أضعف أثرًا حين لا يوجد حافز أو عقوبة.']]],
+['السنة 4 · منشأة المعالجة','المقلب يمتلئ، والمجلس يطلب حلًا لمعالجة النفايات.',[
+['مصنع تدوير عام',{b:-8,s:3,e:7},{b:3},'استثمار كبير بعائد بطيء، ويبقى مرهونًا بجودة الفرز من المصدر.'],
+['شراكة مع القطاع الخاص',{b:-3,s:1,e:5},{b:2},'تقاسم التمويل والمخاطر، بشرط عقد يحمي المصلحة العامة ويضبط الأسعار.'],
+['محرقة لتوليد الطاقة',{b:-7,s:-3,e:-4},null,'تقلل الحجم، لكنها مكلفة وتحتاج رقابة صارمة على الانبعاثات، وقد تضعف حافز الفرز والتدوير.']]],
+['السنة 5 · موسم الصيف','آلاف الزوار يصلون إلى الشاطئ، والنفايات تتراكم، والمصارف تصب بلاستيكًا إلى البحر.',[
+['فرق تنظيف يومية',{b:-4,s:5,e:4},null,'يعالج الأثر الظاهر، ولا يمنع المصدر.'],
+['تنظيم الباعة وفرض عبوات قابلة لإعادة الملء',{b:-1,s:-3,e:6},null,'يقلل المصدر، لكنه يصطدم بمصالح أصحاب الدخل المحدود إن لم تُقدَّم لهم بدائل.'],
+['حواجز التقاط في المصارف',{b:-5,s:1,e:7},{e:2},'إيقاف البلاستيك قبل وصوله للبحر من أكثر الحلول جدوى على المدى المتوسط.']]],
+['السنة 6 · ضغط الصناعة','شركات المشروبات تعترض على قانون يحمّلها تكلفة جمع وتدوير عبواتها (المسؤولية الممتدة للمنتج).',[
+['فرض القانون فورًا',{b:4,s:-3,e:6},{b:3,e:3},'ينقل جزءًا من التكلفة إلى من يصنّع العبوات، لكنه يستدعي ضغطًا سياسيًا.'],
+['تأجيل سنتين مقابل تعهدات',{b:1,s:0,e:2},null,'حل وسط يربح وقتًا، لكن التعهدات الطوعية يصعب التحقق منها.'],
+['إلغاء القانون',{b:3,s:2,e:-7},null,'مكسب سياسي قصير المدى بثمن بيئي واضح.']]],
+['السنة 7 · المقلب القديم','تسربات ودخان من مقلب قديم يجاور حيًّا سكنيًا.',[
+['إغلاق وإعادة تأهيل',{b:-7,s:4,e:8},null,'الأعلى كلفة والأفضل صحيًا وبيئيًا.'],
+['تشغيله سنة إضافية',{b:1,s:-4,e:-6},null,'يوفر مالًا الآن ويرحّل الخطر.'],
+['نقله إلى منطقة أقل نفوذًا',{b:-2,s:-6,e:-2},null,'ينقل الضرر إلى من لا صوت لهم، وتغيب فيه العدالة البيئية.']]],
+['السنة 8 · الفائض الأخير','حققت فائضًا في الميزانية، والسؤال: كيف تترك المدينة بعدك؟',[
+['نظام وديعة للعبوات',{b:-3,s:2,e:6},{b:4,e:3},'يعيد للمستهلك مبلغًا عند إرجاع العبوة، فيرتفع التجميع ويقل الرمي.'],
+['برنامج شواطئ نظيفة طويل الأمد',{b:-4,s:5,e:3},null,'أثر مرئي وشعبي، ويحتاج استمرارية تمويلية.'],
+['ادخار الفائض',{b:6,s:-1,e:0},null,'أمان مالي لخلفك، لكن بلا تحسين ملموس.']]]];
+try{best=+localStorage.getItem('pl_mayor')||0}catch(e){}
+function cl(v){return Math.max(0,Math.min(100,v))}
+function fm(n){return (n>0?'+':'')+n}
+function row(l,v,w,col,d){return '<div><div style="display:flex;justify-content:space-between;font-weight:700"><span>'+l+'</span><span>'+v+(d?' <em class="'+(d>0?'ok':'no')+'" style="font-style:normal">('+fm(d)+')</em>':'')+'</span></div><div class="sb"><i style="width:'+w+'%;background:'+col+'"></i></div></div>'}
+function m(d){d=d||{};return '<div style="display:grid;gap:8px;margin:12px 0">'+row('💰 الميزانية','<span class="'+(B<0?'no':'')+'">'+B+' مليون</span>',Math.max(0,Math.min(100,B*2.5)),'var(--cap)',d.b)+row('🙂 رضا المواطنين',S,S,'var(--s14)',d.s)+row('🌿 حالة البيئة',E,E,'var(--green)',d.e)+'</div>'}
+function intro(){g.innerHTML='<div style="text-align:center"><div class="item" style="font-size:1.5rem;min-height:0">مدير المدينة: ملف النفايات</div><p style="margin-inline:auto">لعبة محاكاة. تتولى إدارة النفايات في مدينة ساحلية ثماني سنوات. في كل سنة معضلة حقيقية بلا خيار مثالي: كل قرار يكسب في جانب ويخسر في آخر، وبعضها يظهر أثره بعد سنة. حافظ على ميزانية لا تنهار (تحمّل حتى عجز 10 مليون)، ورضا الناس فوق الصفر، وبيئة لا تنهار.'+(best?'<br>أفضل نتيجة: '+best+'.':'')+'</p><button class="btn" data-s="1">ابدأ الولاية</button></div>'}
+function show(){var z=Z[i];g.innerHTML='<div style="font-weight:800">'+z[0]+' <span style="font-weight:400;color:var(--muted)">('+(i+1)+'/'+Z.length+')</span></div>'+(yn?'<div class="lesson">'+yn+'</div>':'')+'<div class="prob" style="margin:10px 0">'+z[1]+'</div>'+m()+z[2].map(function(o,k){return '<button class="ch" data-k="'+k+'">'+o[0]+' <small style="font-weight:400;opacity:.8">· الأثر المالي: '+fm(o[1].b)+' مليون</small></button>'}).join('')}
+function res(k){var o=Z[i][2][k],d=o[1];B+=d.b;S=cl(S+d.s);E=cl(E+d.e);L=o[2];
+ var why=B<-10?'انهارت المالية العامة وتعذّر الإنفاق.':S<=0?'غضب شعبي واحتجاجات أنهت ولايتك.':E<=0?'وقعت كارثة بيئية في المدينة.':'';
+ if(why)return fin(why);
+ g.innerHTML='<div style="font-weight:800">قرارك: '+o[0]+'</div><div class="lesson">'+o[3]+(o[2]?' <br><b>أثر متأخر:</b> سيظهر في بداية السنة القادمة.':'')+'</div>'+m(d)+'<button class="btn" data-n="1">'+(i>=Z.length-1?'اعرف تقييمك':'السنة التالية')+'</button>'}
+function nxt(){i++;if(i>=Z.length)return fin('');
+ var inc=4+(S>=65?2:S<30?-2:0);B+=inc;yn='إيراد السنة: '+fm(inc)+' مليون'+(S>=65?' (رضا مرتفع يحسّن التحصيل)':S<30?' (رضا متدنٍّ يضعف التحصيل)':'');
+ if(L){B+=L.b||0;S=cl(S+(L.s||0));E=cl(E+(L.e||0));yn+=' · أثر قرار سابق: '+(L.b?'مالية '+fm(L.b)+' ':'')+(L.s?'رضا '+fm(L.s)+' ':'')+(L.e?'بيئة '+fm(L.e):'');L=null}
+ if(S<=0||E<=0||B<-10)return fin(B<-10?'انهارت المالية العامة.':S<=0?'غضب شعبي أنهى ولايتك.':'وقعت كارثة بيئية.');
+ show()}
+function fin(why){var sc=why?Math.round((S+E)/2):Math.round(S+E+Math.max(0,Math.min(B,20))*1.5),w=S<=E&&S<=B*2.5?'رضا المواطنين':E<=B*2.5?'البيئة':'المالية';
+ if(sc>best){best=sc;try{localStorage.setItem('pl_mayor',sc)}catch(e){}}
+ var rk=why?'ولاية منتهية مبكرًا':sc>=170?'مدير استثنائي':sc>=130?'مدير متوازن':sc>=90?'مدير متعثر':'فترة صعبة';
+ g.innerHTML='<div style="text-align:center"><div class="item" style="font-size:1.5rem;min-height:0">'+rk+'</div><p style="margin-inline:auto">'+(why?why+' ':'النتيجة: '+sc+' من 230. ')+'أضعف جوانب ولايتك: '+w+'. أفضل نتيجة لك: '+best+'.</p></div>'+m()+'<div class="lesson">الدرس: لا يوجد قرار مجاني. النجاح أن توازن بين التمويل والعدالة الاجتماعية والبيئة، وأن تبدأ بحلول المصدر قبل حلول المعالجة.</div><div style="text-align:center"><button class="btn" data-s="1">ولاية جديدة</button></div>'}
+g.onclick=function(e){var b=e.target.closest('button');if(!b)return;
+ if(b.dataset.s){B=14;S=50;E=40;i=0;L=null;yn='';show()}
+ else if(b.dataset.k!==undefined)res(+b.dataset.k)
+ else if(b.dataset.n)nxt()};
+intro();
+})();
+
+(function(){
+var T=document.getElementById('gt');
+T.onclick=function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(T.children,function(x){var on=x===b;x.setAttribute('aria-selected',on);document.getElementById(x.dataset.g).hidden=!on})};
+function sh(a){return a.slice().sort(function(){return Math.random()-.5})}
+/* ذاكرة الكوكب */
+var g=document.getElementById('mg'),E=[['🐢','السلاحف قد تخلط الأكياس بقناديل البحر فتأكلها.'],['🌊','أغلب البلاستيك يصل للبحر عبر الأنهار والمصارف.'],['♻️','أقل من 10% من البلاستيك أُعيد تدويره عالميًا.'],['🌱','المنتجات القابلة لإعادة الاستخدام توفر نفايات وتكلفة.'],['☀️','الطاقة النظيفة تقلل انبعاثات التصنيع.'],['💧','الميكروبلاستيك موجود في المياه والتربة.'],['🌳','الأشجار تمتص الكربون وتحمي التربة.'],['🌍','قرارات الأفراد تتراكم لتصنع فرقًا عالميًا.']],deck,st,op,mt,mv,lk;
+function mi(){deck=[];E.forEach(function(e){deck.push(e,e)});deck=sh(deck);st=deck.map(function(){return ''});op=[];mt=0;mv=0;lk=false;md('اقلب بطاقتين متطابقتين. كل زوج يكشف معلومة.')}
+function md(msg,win){g.innerHTML='<div style="font-weight:800">الحركات: '+mv+' · الأزواج: '+mt+'/8</div><div class="mem">'+deck.map(function(e,i){return '<button class="mc '+st[i]+'" data-i="'+i+'" aria-label="'+(st[i]?e[0]:'بطاقة مخفية')+'">'+(st[i]?e[0]:'؟')+'</button>'}).join('')+'</div><div class="lesson">'+msg+'</div>'+(win?'<button class="btn" data-r="1">العب مرة أخرى</button>':'')}
+g.onclick=function(e){var b=e.target.closest('button');if(!b)return;
+ if(b.dataset.r){mi();return}
+ var i=+b.dataset.i;if(lk||st[i])return;st[i]='on';op.push(i);
+ if(op.length<2){md('اختر البطاقة الثانية.');return}
+ mv++;var a=op[0],c=op[1];op=[];
+ if(deck[a][0]===deck[c][0]){st[a]=st[c]='ok';mt++;
+  if(mt===8)md('أنهيت اللعبة في '+mv+' حركة: '+(mv<=12?'ذاكرة خارقة!':mv<=18?'ممتاز!':'جيد، جرّب تقليلها.'),1);
+  else md(deck[a][0]+' '+deck[a][1])}
+ else{lk=true;md('ليست متطابقة.');setTimeout(function(){st[a]='';st[c]='';lk=false;md('جرّب مرة أخرى.')},800)}};
+mi();
+})();
+</script>
+</body>
+</html>
